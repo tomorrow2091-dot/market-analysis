@@ -40,4 +40,4 @@ jobs:
             core.setOutput('gist_url', response.data.html_url);
 
       - name: Show Gist URL
-        run: echo "Gist URL: ${{ steps.create_gist.outputs.gist_url }}"
+        run: 'echo "Gist URL: ${{ steps.create_gist.outputs.gist_url }}"'
