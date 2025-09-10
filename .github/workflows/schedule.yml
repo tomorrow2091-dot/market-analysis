@@ -1,0 +1,15 @@
+name: Daily Analysis
+on:
+  schedule: [{ cron: '0 22 * * *' }] # UTC 22시 = KST 07시
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with: { python-version: '3.x' }
+      - run: pip install requests schedule
+      - run: python all_market_perplexity.py > result.txt
+      - uses: devops-infra/action-gist@v1
+        with:
+          args: --file=result.txt --description="Daily Market Analysis" --public
