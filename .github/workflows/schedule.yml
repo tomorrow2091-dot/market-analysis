@@ -1,6 +1,8 @@
 name: Daily Analysis
 on:
-  schedule: [{ cron: '0 22 * * *' }] # UTC 22시 = KST 07시
+  workflow_dispatch:   # 여기를 추가
+  schedule:
+    - cron: '0 22 * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
