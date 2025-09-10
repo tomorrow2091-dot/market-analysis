@@ -1,17 +1,32 @@
-name: Daily Analysis
+name: Daily Market Analysis
+
 on:
-  workflow_dispatch:   # 여기를 추가
+  workflow_dispatch:
   schedule:
-    - cron: '0 22 * * *'
+    - cron: '0 22 * * *'  # UTC 22시 = KST 07시
+
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with: { python-version: '3.x' }
-      - run: pip install requests schedule
-      - run: python all_market_perplexity.py > result.txt
-      - uses: devops-infra/action-gist@v1
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          args: --file=result.txt --description="Daily Market Analysis" --public
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests schedule
+
+      - name: Run analysis script
+        run: python all_market_perplexity.py > result.txt
+
+      - name: Create Gist
+        uses: peter-evans/create-or-update-gist@v4
+        with:
+          gist_id: ''                # 처음 생성 시 비워둡니다
+          description: 'Daily Market Analysis'
+          files: |
+            result.txt
+          public: true
