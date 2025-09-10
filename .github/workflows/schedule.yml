@@ -8,8 +8,10 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,21 +27,21 @@ jobs:
           python all_market_perplexity.py > result.txt
 
       - name: Create Gist via GitHub Script
-  id: create_gist
-  uses: actions/github-script@v7
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    script: |
-      const core = require('@actions/core');
-      const fs = require('fs');
-      const content = fs.readFileSync('result.txt', 'utf8');
-      const response = await github.rest.gists.create({
-        files: { 'result.txt': { content } },
-        description: 'Daily Market Analysis',
-        public: true
-      });
-      core.setOutput('gist_url', response.data.html_url);
-
+        id: create_gist
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const core = require('@actions/core');
+            const fs = require('fs');
+            const content = fs.readFileSync('result.txt', 'utf8');
+            const response = await github.rest.gists.create({
+              files: { 'result.txt': { content } },
+              description: 'Daily Market Analysis',
+              public: true
+            });
+            core.setOutput('gist_url', response.data.html_url);
 
       - name: Show Gist URL
-        run: 'echo "Gist URL: ${{ steps.create_gist.outputs.gist_url }}"'
+        run: |
+          echo "Gist URL: ${{ steps.create_gist.outputs.gist_url }}"
