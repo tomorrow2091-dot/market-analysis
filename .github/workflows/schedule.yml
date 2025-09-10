@@ -1,9 +1,11 @@
 name: Daily Market Analysis
 
 on:
+  push:          # 커밋(push) 시에도 실행
   workflow_dispatch:
   schedule:
-    - cron: '0 22 * * *'  # UTC 22시 = KST 07시
+    - cron: '0 22 * * *'
+
 
 jobs:
   run:
